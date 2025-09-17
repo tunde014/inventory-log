@@ -19,9 +19,9 @@ const Index = () => {
       name: "Industrial Water Pump",
       description: "High-capacity centrifugal pump for dewatering operations",
       quantity: 3,
+      unitOfMeasurement: "pcs",
       category: "dewatering",
       type: "equipment",
-      unitPrice: 2500,
       location: "Warehouse A",
       createdAt: new Date(),
       updatedAt: new Date()
@@ -31,9 +31,9 @@ const Index = () => {
       name: "Waterproof Membrane",
       description: "Heavy-duty waterproofing membrane sheets",
       quantity: 150,
+      unitOfMeasurement: "rolls",
       category: "waterproofing",
       type: "consumable",
-      unitPrice: 45,
       location: "Storage Room B",
       createdAt: new Date(),
       updatedAt: new Date()
@@ -43,9 +43,9 @@ const Index = () => {
       name: "Submersible Pump",
       description: "Compact submersible pump for small scale dewatering",
       quantity: 0,
+      unitOfMeasurement: "pcs",
       category: "dewatering", 
       type: "equipment",
-      unitPrice: 800,
       location: "Warehouse A",
       createdAt: new Date(),
       updatedAt: new Date()
@@ -55,9 +55,9 @@ const Index = () => {
       name: "Sealant Tubes",
       description: "Professional grade waterproof sealant",
       quantity: 25,
+      unitOfMeasurement: "pcs",
       category: "waterproofing",
       type: "consumable", 
-      unitPrice: 15,
       location: "Storage Room B",
       createdAt: new Date(),
       updatedAt: new Date()
@@ -68,14 +68,14 @@ const Index = () => {
     {
       id: "WB001",
       items: [
-        { assetId: "1", assetName: "Industrial Water Pump", quantity: 1, returnedQuantity: 0 }
+        { assetId: "1", assetName: "Industrial Water Pump", quantity: 1, returnedQuantity: 0, status: "outstanding" }
       ],
       employee: "John Smith",
       department: "Construction",
       purpose: "Site dewatering project",
       issueDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
       expectedReturnDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
-      status: "issued",
+      status: "outstanding",
       createdAt: new Date(),
       updatedAt: new Date()
     }
@@ -90,7 +90,7 @@ const Index = () => {
       employee: "Mike Johnson",
       checkoutDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
       expectedReturnDays: 7,
-      status: "pending"
+      status: "outstanding"
     }
   ]);
 
@@ -148,7 +148,7 @@ const Index = () => {
 
     // Update checkout status
     setQuickCheckouts(prev => prev.map(c => 
-      c.id === checkoutId ? { ...c, status: 'returned' } : c
+      c.id === checkoutId ? { ...c, status: 'return_completed' } : c
     ));
 
     // Return quantity to asset

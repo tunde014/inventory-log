@@ -33,7 +33,7 @@ export function QuickCheckoutForm({
   });
 
   const availableAssets = assets.filter(asset => asset.quantity > 0);
-  const pendingCheckouts = quickCheckouts.filter(checkout => checkout.status === 'pending');
+  const pendingCheckouts = quickCheckouts.filter(checkout => checkout.status === 'outstanding');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,7 +74,7 @@ export function QuickCheckoutForm({
       employee: formData.employee,
       checkoutDate: new Date(),
       expectedReturnDays: parseInt(formData.expectedReturnDays),
-      status: 'pending' as const
+      status: 'outstanding' as const
     };
 
     onQuickCheckout(checkoutData);
@@ -105,7 +105,7 @@ export function QuickCheckoutForm({
     } else if (daysOut >= checkout.expectedReturnDays - 1) {
       return <Badge className="bg-warning text-warning-foreground">Due Soon ({daysOut} days)</Badge>;
     } else {
-      return <Badge className="bg-pending text-pending-foreground">Pending ({daysOut} days)</Badge>;
+      return <Badge className="bg-pending text-pending-foreground">Outstanding ({daysOut} days)</Badge>;
     }
   };
 

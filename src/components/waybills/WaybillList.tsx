@@ -15,12 +15,12 @@ interface WaybillListProps {
 export function WaybillList({ waybills, onViewWaybill, onInitiateReturn }: WaybillListProps) {
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'issued':
-        return <Badge className="bg-pending text-pending-foreground">Issued</Badge>;
-      case 'partially_returned':
-        return <Badge className="bg-warning text-warning-foreground">Partially Returned</Badge>;
-      case 'fully_returned':
-        return <Badge className="bg-available text-available-foreground">Fully Returned</Badge>;
+      case 'outstanding':
+        return <Badge className="bg-pending text-pending-foreground">Outstanding</Badge>;
+      case 'return_initiated':
+        return <Badge className="bg-warning text-warning-foreground">Return Initiated</Badge>;
+      case 'return_completed':
+        return <Badge className="bg-available text-available-foreground">Return Completed</Badge>;
       default:
         return <Badge variant="outline">{status}</Badge>;
     }
@@ -86,7 +86,7 @@ export function WaybillList({ waybills, onViewWaybill, onInitiateReturn }: Waybi
                     >
                       <Eye className="h-4 w-4" />
                     </Button>
-                    {waybill.status !== 'fully_returned' && (
+                    {waybill.status !== 'return_completed' && (
                       <Button
                         variant="outline"
                         size="sm"

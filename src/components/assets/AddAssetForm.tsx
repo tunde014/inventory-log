@@ -19,16 +19,16 @@ export function AddAssetForm({ onAddAsset }: AddAssetFormProps) {
     name: "",
     description: "",
     quantity: "",
+    unitOfMeasurement: "",
     category: "",
     type: "",
-    unitPrice: "",
     location: ""
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name || !formData.quantity || !formData.category || !formData.type) {
+    if (!formData.name || !formData.quantity || !formData.unitOfMeasurement || !formData.category || !formData.type) {
       toast({
         title: "Error",
         description: "Please fill in all required fields",
@@ -41,9 +41,9 @@ export function AddAssetForm({ onAddAsset }: AddAssetFormProps) {
       name: formData.name,
       description: formData.description || undefined,
       quantity: parseInt(formData.quantity),
+      unitOfMeasurement: formData.unitOfMeasurement,
       category: formData.category as 'dewatering' | 'waterproofing',
       type: formData.type as 'consumable' | 'non-consumable' | 'tools' | 'equipment',
-      unitPrice: formData.unitPrice ? parseFloat(formData.unitPrice) : undefined,
       location: formData.location || undefined
     };
 
@@ -54,9 +54,9 @@ export function AddAssetForm({ onAddAsset }: AddAssetFormProps) {
       name: "",
       description: "",
       quantity: "",
+      unitOfMeasurement: "",
       category: "",
       type: "",
-      unitPrice: "",
       location: ""
     });
 
@@ -102,6 +102,28 @@ export function AddAssetForm({ onAddAsset }: AddAssetFormProps) {
             </div>
             
             <div className="space-y-2">
+              <Label htmlFor="unitOfMeasurement">Unit of Measurement *</Label>
+              <Select 
+                value={formData.unitOfMeasurement} 
+                onValueChange={(value) => setFormData(prev => ({ ...prev, unitOfMeasurement: value }))}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select unit" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="pcs">Pieces</SelectItem>
+                  <SelectItem value="boxes">Boxes</SelectItem>
+                  <SelectItem value="rolls">Rolls</SelectItem>
+                  <SelectItem value="meters">Meters</SelectItem>
+                  <SelectItem value="liters">Liters</SelectItem>
+                  <SelectItem value="kg">Kilograms</SelectItem>
+                  <SelectItem value="sets">Sets</SelectItem>
+                  <SelectItem value="packs">Packs</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="space-y-2">
               <Label htmlFor="category">Category *</Label>
               <Select 
                 value={formData.category} 
@@ -135,18 +157,6 @@ export function AddAssetForm({ onAddAsset }: AddAssetFormProps) {
               </Select>
             </div>
             
-            <div className="space-y-2">
-              <Label htmlFor="unitPrice">Unit Price</Label>
-              <Input
-                id="unitPrice"
-                type="number"
-                step="0.01"
-                min="0"
-                value={formData.unitPrice}
-                onChange={(e) => setFormData(prev => ({ ...prev, unitPrice: e.target.value }))}
-                placeholder="Enter unit price"
-              />
-            </div>
             
             <div className="space-y-2">
               <Label htmlFor="location">Location</Label>

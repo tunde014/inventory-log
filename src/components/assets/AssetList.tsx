@@ -114,6 +114,7 @@ export function AssetList({ assets, onEditAsset }: AssetListProps) {
               <TableHead>Category</TableHead>
               <TableHead>Type</TableHead>
               <TableHead>Quantity</TableHead>
+              <TableHead>Unit</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
@@ -134,6 +135,7 @@ export function AssetList({ assets, onEditAsset }: AssetListProps) {
                 <TableCell>{getCategoryBadge(asset.category)}</TableCell>
                 <TableCell>{getTypeBadge(asset.type)}</TableCell>
                 <TableCell className="font-mono">{asset.quantity}</TableCell>
+                <TableCell className="text-muted-foreground">{asset.unitOfMeasurement}</TableCell>
                 <TableCell>{getStatusBadge(asset.quantity)}</TableCell>
                 <TableCell>
                   <Button

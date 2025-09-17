@@ -3,9 +3,9 @@ export interface Asset {
   name: string;
   description?: string;
   quantity: number;
+  unitOfMeasurement: string;
   category: 'dewatering' | 'waterproofing';
   type: 'consumable' | 'non-consumable' | 'tools' | 'equipment';
-  unitPrice?: number;
   location?: string;
   createdAt: Date;
   updatedAt: Date;
@@ -19,7 +19,7 @@ export interface Waybill {
   purpose: string;
   issueDate: Date;
   expectedReturnDate?: Date;
-  status: 'issued' | 'partially_returned' | 'fully_returned';
+  status: 'outstanding' | 'return_initiated' | 'return_completed';
   createdAt: Date;
   updatedAt: Date;
 }
@@ -29,6 +29,7 @@ export interface WaybillItem {
   assetName: string;
   quantity: number;
   returnedQuantity: number;
+  status: 'outstanding' | 'return_initiated' | 'return_completed' | 'lost' | 'damaged';
 }
 
 export interface QuickCheckout {
@@ -39,7 +40,7 @@ export interface QuickCheckout {
   employee: string;
   checkoutDate: Date;
   expectedReturnDays: number;
-  status: 'pending' | 'returned';
+  status: 'outstanding' | 'return_completed' | 'lost' | 'damaged';
 }
 
 export interface ReturnBill {

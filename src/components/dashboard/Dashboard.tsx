@@ -21,16 +21,16 @@ interface DashboardProps {
 
 export function Dashboard({ assets, waybills, quickCheckouts }: DashboardProps) {
   const totalAssets = assets.length;
-  const totalValue = assets.reduce((sum, asset) => sum + (asset.unitPrice || 0) * asset.quantity, 0);
+  const totalItems = assets.reduce((sum, asset) => sum + asset.quantity, 0);
   const lowStockItems = assets.filter(asset => asset.quantity <= 5 && asset.quantity > 0).length;
   const outOfStockItems = assets.filter(asset => asset.quantity === 0).length;
-  const activeWaybills = waybills.filter(w => w.status !== 'fully_returned').length;
-  const pendingQuickCheckouts = quickCheckouts.filter(q => q.status === 'pending').length;
+  const activeWaybills = waybills.filter(w => w.status !== 'return_completed').length;
+  const pendingQuickCheckouts = quickCheckouts.filter(q => q.status === 'outstanding').length;
 
   const overdueReturns = waybills.filter(waybill => 
     waybill.expectedReturnDate && 
     new Date() > waybill.expectedReturnDate && 
-    waybill.status !== 'fully_returned'
+    waybill.status !== 'return_completed'
   );
 
   const recentActivity = [
@@ -58,8 +58,8 @@ export function Dashboard({ assets, waybills, quickCheckouts }: DashboardProps) 
           variant="default"
         />
         <StatsCard
-          title="Total Value"
-          value={`$${totalValue.toLocaleString()}`}
+          title="Total Items"
+          value={totalItems.toLocaleString()}
           icon={TrendingUp}
           variant="success"
         />
