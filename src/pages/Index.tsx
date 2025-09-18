@@ -76,8 +76,6 @@ const Index = () => {
       items: [
         { assetId: "1", assetName: "Industrial Water Pump", quantity: 1, returnedQuantity: 0, status: "outstanding" }
       ],
-      employee: "John Smith",
-      department: "Construction",
       purpose: "Site dewatering project",
       driverName: "Mike Driver",
       vehicle: "Toyota Hilux - ABC-123D",

@@ -120,7 +120,7 @@ export function ReturnForm({ waybill, onProcessReturn, onCancel }: ReturnFormPro
       <CardHeader>
         <CardTitle>Process Return - Waybill {waybill.id}</CardTitle>
         <div className="text-sm text-muted-foreground">
-          <div>Employee: {waybill.employee} | Department: {waybill.department}</div>
+          <div>Driver: {waybill.driverName} | Vehicle: {waybill.vehicle}</div>
           <div>Issue Date: {format(waybill.issueDate, 'dd MMM yyyy')}</div>
           {waybill.expectedReturnDate && (
             <div>Expected Return: {format(waybill.expectedReturnDate, 'dd MMM yyyy')}</div>

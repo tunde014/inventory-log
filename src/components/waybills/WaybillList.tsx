@@ -47,8 +47,8 @@ export function WaybillList({ waybills, onViewWaybill, onInitiateReturn }: Waybi
           <TableHeader>
             <TableRow>
               <TableHead>Waybill ID</TableHead>
-              <TableHead>Employee</TableHead>
-              <TableHead>Department</TableHead>
+              <TableHead>Driver</TableHead>
+              <TableHead>Vehicle</TableHead>
               <TableHead>Issue Date</TableHead>
               <TableHead>Expected Return</TableHead>
               <TableHead>Status</TableHead>
@@ -59,8 +59,8 @@ export function WaybillList({ waybills, onViewWaybill, onInitiateReturn }: Waybi
             {waybills.map((waybill) => (
               <TableRow key={waybill.id}>
                 <TableCell className="font-mono">{waybill.id}</TableCell>
-                <TableCell>{waybill.employee}</TableCell>
-                <TableCell>{waybill.department}</TableCell>
+                <TableCell>{waybill.driverName}</TableCell>
+                <TableCell>{waybill.vehicle}</TableCell>
                 <TableCell>{format(waybill.issueDate, 'MMM dd, yyyy')}</TableCell>
                 <TableCell>
                   {waybill.expectedReturnDate ? (

@@ -123,9 +123,6 @@ export function WaybillDocument({ waybill, onClose }: WaybillDocumentProps) {
           <div className="text-black">
             <strong>Materials Waybill for {waybill.purpose}</strong>
           </div>
-          <div className="text-black mt-1">
-            <strong>Employee:</strong> {waybill.employee} | <strong>Department:</strong> {waybill.department}
-          </div>
         </div>
 
         {/* Items List */}
@@ -133,7 +130,7 @@ export function WaybillDocument({ waybill, onClose }: WaybillDocumentProps) {
           <div className="space-y-2">
             {waybill.items.map((item, index) => (
               <div key={index} className="text-black">
-                • {item.assetName} ({item.quantity})
+                {index + 1}. {item.assetName} ({item.quantity})
               </div>
             ))}
           </div>

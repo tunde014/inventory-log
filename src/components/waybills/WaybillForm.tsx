@@ -24,8 +24,6 @@ interface WaybillItemInput {
 
 export function WaybillForm({ assets, onCreateWaybill, onCancel }: WaybillFormProps) {
   const { toast } = useToast();
-  const [employee, setEmployee] = useState("");
-  const [department, setDepartment] = useState("");
   const [purpose, setPurpose] = useState("");
   const [driverName, setDriverName] = useState("");
   const [vehicle, setVehicle] = useState("");
@@ -69,7 +67,7 @@ export function WaybillForm({ assets, onCreateWaybill, onCancel }: WaybillFormPr
     e.preventDefault();
     
     // Validation
-    if (!employee || !department || !purpose || !driverName || !vehicle) {
+    if (!purpose || !driverName || !vehicle) {
       toast({
         title: "Missing Information",
         description: "Please fill in all required fields",
@@ -108,8 +106,6 @@ export function WaybillForm({ assets, onCreateWaybill, onCancel }: WaybillFormPr
         returnedQuantity: 0,
         status: 'outstanding'
       })),
-      employee,
-      department,
       purpose,
       driverName,
       vehicle,
@@ -129,26 +125,6 @@ export function WaybillForm({ assets, onCreateWaybill, onCancel }: WaybillFormPr
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="employee">Employee Name *</Label>
-              <Input
-                id="employee"
-                value={employee}
-                onChange={(e) => setEmployee(e.target.value)}
-                placeholder="Enter employee name"
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="department">Department *</Label>
-              <Input
-                id="department"
-                value={department}
-                onChange={(e) => setDepartment(e.target.value)}
-                placeholder="Enter department"
-                required
-              />
-            </div>
             <div>
               <Label htmlFor="driverName">Driver's Name *</Label>
               <Input

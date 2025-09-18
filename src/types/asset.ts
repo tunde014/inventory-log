@@ -14,8 +14,6 @@ export interface Asset {
 export interface Waybill {
   id: string;
   items: WaybillItem[];
-  employee: string;
-  department: string;
   purpose: string;
   driverName: string;
   vehicle: string;

@@ -36,7 +36,7 @@ export function Dashboard({ assets, waybills, quickCheckouts }: DashboardProps) 
   const recentActivity = [
     ...waybills.slice(-5).map(w => ({
       type: 'waybill',
-      description: `Waybill ${w.id} issued to ${w.employee}`,
+      description: `Waybill ${w.id} for ${w.purpose}`,
       date: w.issueDate,
       status: w.status
     })),
