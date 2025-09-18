@@ -17,6 +17,8 @@ export interface Waybill {
   employee: string;
   department: string;
   purpose: string;
+  driverName: string;
+  vehicle: string;
   issueDate: Date;
   expectedReturnDate?: Date;
   status: 'outstanding' | 'return_initiated' | 'return_completed';

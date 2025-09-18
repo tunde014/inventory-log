@@ -4,13 +4,19 @@ import { Dashboard } from "@/components/dashboard/Dashboard";
 import { AssetList } from "@/components/assets/AssetList";
 import { AddAssetForm } from "@/components/assets/AddAssetForm";
 import { WaybillList } from "@/components/waybills/WaybillList";
+import { WaybillForm } from "@/components/waybills/WaybillForm";
+import { WaybillDocument } from "@/components/waybills/WaybillDocument";
+import { ReturnForm } from "@/components/waybills/ReturnForm";
 import { QuickCheckoutForm } from "@/components/checkout/QuickCheckoutForm";
-import { Asset, Waybill, QuickCheckout } from "@/types/asset";
+import { CompanySettings } from "@/components/settings/CompanySettings";
+import { Asset, Waybill, QuickCheckout, ReturnBill } from "@/types/asset";
 import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [showWaybillDocument, setShowWaybillDocument] = useState<Waybill | null>(null);
+  const [showReturnForm, setShowReturnForm] = useState<Waybill | null>(null);
   
   // Sample data - in a real app, this would come from a backend/database
   const [assets, setAssets] = useState<Asset[]>([
@@ -73,6 +79,8 @@ const Index = () => {
       employee: "John Smith",
       department: "Construction",
       purpose: "Site dewatering project",
+      driverName: "Mike Driver",
+      vehicle: "Toyota Hilux - ABC-123D",
       issueDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
       expectedReturnDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
       status: "outstanding",
@@ -112,17 +120,87 @@ const Index = () => {
     });
   };
 
-  const handleViewWaybill = (waybill: Waybill) => {
+  const handleCreateWaybill = (waybillData: Omit<Waybill, 'id' | 'createdAt' | 'updatedAt'>) => {
+    const newWaybill: Waybill = {
+      ...waybillData,
+      id: `WB${Date.now().toString().slice(-6)}`,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    
+    // Update asset quantities
+    waybillData.items.forEach(item => {
+      setAssets(prev => prev.map(asset => 
+        asset.id === item.assetId 
+          ? { ...asset, quantity: asset.quantity - item.quantity, updatedAt: new Date() }
+          : asset
+      ));
+    });
+    
+    setWaybills(prev => [...prev, newWaybill]);
+    setShowWaybillDocument(newWaybill);
+    setActiveTab("waybills");
+    
     toast({
-      title: "View Waybill",
-      description: `Viewing waybill ${waybill.id} (Feature coming soon)`
+      title: "Waybill Created",
+      description: `Waybill ${newWaybill.id} created successfully`
     });
   };
 
+  const handleViewWaybill = (waybill: Waybill) => {
+    setShowWaybillDocument(waybill);
+  };
+
   const handleInitiateReturn = (waybill: Waybill) => {
+    setShowReturnForm(waybill);
+  };
+
+  const handleProcessReturn = (returnData: Omit<ReturnBill, 'id'>) => {
+    // Update waybill items with returned quantities
+    setWaybills(prev => prev.map(waybill => {
+      if (waybill.id === returnData.waybillId) {
+        const updatedItems = waybill.items.map(item => {
+          const returnItem = returnData.items.find(ri => ri.assetId === item.assetId);
+          if (returnItem) {
+            return {
+              ...item,
+              returnedQuantity: item.returnedQuantity + returnItem.quantity,
+              status: (item.returnedQuantity + returnItem.quantity >= item.quantity) 
+                ? 'return_completed' as const
+                : 'return_initiated' as const
+            };
+          }
+          return item;
+        });
+        
+        const allItemsReturned = updatedItems.every(item => item.returnedQuantity >= item.quantity);
+        
+        return {
+          ...waybill,
+          items: updatedItems,
+          status: allItemsReturned ? 'return_completed' as const : 'return_initiated' as const,
+          updatedAt: new Date()
+        };
+      }
+      return waybill;
+    }));
+
+    // Update asset quantities for items in good condition
+    returnData.items.forEach(returnItem => {
+      if (returnItem.condition === 'good') {
+        setAssets(prev => prev.map(asset => 
+          asset.id === returnItem.assetId 
+            ? { ...asset, quantity: asset.quantity + returnItem.quantity, updatedAt: new Date() }
+            : asset
+        ));
+      }
+    });
+
+    setShowReturnForm(null);
+    
     toast({
-      title: "Initiate Return",
-      description: `Initiating return for waybill ${waybill.id} (Feature coming soon)`
+      title: "Return Processed",
+      description: `Return processed successfully for waybill ${returnData.waybillId}`
     });
   };
 
@@ -165,6 +243,18 @@ const Index = () => {
   };
 
   const renderContent = () => {
+    if (showWaybillDocument) {
+      return <WaybillDocument waybill={showWaybillDocument} onClose={() => setShowWaybillDocument(null)} />;
+    }
+    
+    if (showReturnForm) {
+      return <ReturnForm 
+        waybill={showReturnForm} 
+        onProcessReturn={handleProcessReturn}
+        onCancel={() => setShowReturnForm(null)}
+      />;
+    }
+
     switch (activeTab) {
       case "dashboard":
         return <Dashboard assets={assets} waybills={waybills} quickCheckouts={quickCheckouts} />;
@@ -172,6 +262,12 @@ const Index = () => {
         return <AssetList assets={assets} onEditAsset={handleEditAsset} />;
       case "add-asset":
         return <AddAssetForm onAddAsset={handleAddAsset} />;
+      case "create-waybill":
+        return <WaybillForm 
+          assets={assets}
+          onCreateWaybill={handleCreateWaybill}
+          onCancel={() => setActiveTab("dashboard")}
+        />;
       case "waybills":
         return <WaybillList 
           waybills={waybills} 
@@ -185,6 +281,8 @@ const Index = () => {
           onQuickCheckout={handleQuickCheckout}
           onReturnItem={handleReturnItem}
         />;
+      case "settings":
+        return <CompanySettings />;
       default:
         return <Dashboard assets={assets} waybills={waybills} quickCheckouts={quickCheckouts} />;
     }

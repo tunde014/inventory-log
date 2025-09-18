@@ -6,7 +6,9 @@ import {
   FileText, 
   RotateCcw, 
   Plus,
-  Activity
+  Activity,
+  Settings,
+  ShoppingCart
 } from "lucide-react";
 
 interface SidebarProps {
@@ -18,10 +20,11 @@ export function Sidebar({ activeTab, onTabChange }: SidebarProps) {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'assets', label: 'Asset Inventory', icon: Package },
-    { id: 'waybills', label: 'Waybills', icon: FileText },
-    { id: 'returns', label: 'Returns', icon: RotateCcw },
-    { id: 'quick-checkout', label: 'Quick Checkout', icon: Activity },
     { id: 'add-asset', label: 'Add Asset', icon: Plus },
+    { id: 'create-waybill', label: 'Create Waybill', icon: FileText },
+    { id: 'waybills', label: 'View Waybills', icon: FileText },
+    { id: 'quick-checkout', label: 'Quick Checkout', icon: ShoppingCart },
+    { id: 'settings', label: 'Company Settings', icon: Settings },
   ];
 
   return (
