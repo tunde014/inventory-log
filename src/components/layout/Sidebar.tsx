@@ -8,7 +8,8 @@ import {
   Plus,
   Activity,
   Settings,
-  ShoppingCart
+  ShoppingCart,
+  MapPin // Add this import for a site/location icon
 } from "lucide-react";
 
 interface SidebarProps {
@@ -24,13 +25,14 @@ export function Sidebar({ activeTab, onTabChange }: SidebarProps) {
     { id: 'create-waybill', label: 'Create Waybill', icon: FileText },
     { id: 'waybills', label: 'View Waybills', icon: FileText },
     { id: 'quick-checkout', label: 'Quick Checkout', icon: ShoppingCart },
+    { id: 'sites', label: 'Sites', icon: MapPin }, // <-- Add this line
     { id: 'settings', label: 'Company Settings', icon: Settings },
   ];
 
   return (
     <div className="w-64 bg-card border-r border-border h-screen p-4">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-primary">AssetTracker</h1>
+        <h1 className="text-2xl font-bold text-primary">DCEL</h1>
         <p className="text-sm text-muted-foreground">Asset Management System</p>
       </div>
       

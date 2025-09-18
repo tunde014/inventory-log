@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,11 +9,13 @@ import { Plus } from "lucide-react";
 import { Asset } from "@/types/asset";
 import { useToast } from "@/hooks/use-toast";
 
-interface AddAssetFormProps {
-  onAddAsset: (asset: Omit<Asset, 'id' | 'createdAt' | 'updatedAt'>) => void;
+export interface AddAssetFormProps {
+  asset?: Asset; // optional if used for both add and edit
+  onSave: (updatedAsset: Asset) => void;
+  onCancel: () => void;
 }
 
-export function AddAssetForm({ onAddAsset }: AddAssetFormProps) {
+export function AddAssetForm({ asset, onSave, onCancel }: AddAssetFormProps) {
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: "",
@@ -24,6 +26,20 @@ export function AddAssetForm({ onAddAsset }: AddAssetFormProps) {
     type: "",
     location: ""
   });
+
+  useEffect(() => {
+    if (asset) {
+      setFormData({
+        name: asset.name,
+        description: asset.description || "",
+        quantity: asset.quantity.toString(),
+        unitOfMeasurement: asset.unitOfMeasurement,
+        category: asset.category,
+        type: asset.type,
+        location: asset.location || ""
+      });
+    }
+  }, [asset]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,6 +54,7 @@ export function AddAssetForm({ onAddAsset }: AddAssetFormProps) {
     }
 
     const assetData = {
+      id: asset?.id, // include id if editing existing asset
       name: formData.name,
       description: formData.description || undefined,
       quantity: parseInt(formData.quantity),
@@ -47,22 +64,11 @@ export function AddAssetForm({ onAddAsset }: AddAssetFormProps) {
       location: formData.location || undefined
     };
 
-    onAddAsset(assetData);
+    onSave(assetData);
     
-    // Reset form
-    setFormData({
-      name: "",
-      description: "",
-      quantity: "",
-      unitOfMeasurement: "",
-      category: "",
-      type: "",
-      location: ""
-    });
-
     toast({
       title: "Success",
-      description: "Asset added successfully"
+      description: "Asset saved successfully"
     });
   };
 
@@ -71,7 +77,7 @@ export function AddAssetForm({ onAddAsset }: AddAssetFormProps) {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Plus className="h-5 w-5" />
-          Add New Asset
+          {asset ? "Edit Asset" : "Add New Asset"}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -180,10 +186,15 @@ export function AddAssetForm({ onAddAsset }: AddAssetFormProps) {
             />
           </div>
           
-          <Button type="submit" className="w-full">
-            <Plus className="h-4 w-4 mr-2" />
-            Add Asset
-          </Button>
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={onCancel}>
+              Cancel
+            </Button>
+            <Button type="submit" className="w-full">
+              <Plus className="h-4 w-4 mr-2" />
+              {asset ? "Save Changes" : "Add Asset"}
+            </Button>
+          </div>
         </form>
       </CardContent>
     </Card>

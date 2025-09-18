@@ -87,73 +87,81 @@ export function WaybillDocument({ waybill, onClose }: WaybillDocumentProps) {
           }
         `}</style>
 
-        {/* Company Logo */}
-        {companySettings?.logoUrl && (
-          <div className="text-center mb-6">
-            <img 
-              src={companySettings.logoUrl} 
-              alt="Company Logo" 
-              className="h-16 mx-auto"
-            />
+        {/* Header: Logo left, Waybill ID right */}
+        <div className="flex justify-between items-start mb-2">
+          <div className="flex items-center gap-4">
+            {companySettings?.logoUrl && (
+              <img 
+                src={companySettings.logoUrl} 
+                alt="Company Logo" 
+                className="h-16"
+                style={{ objectFit: 'contain' }}
+              />
+            )}
+            <div className="ml-2">
+              <div className="font-bold text-lg text-blue-900" style={{ fontFamily: 'Georgia, serif' }}>
+                {companySettings?.companyName || 'Dewatering Construction Etc Limited.'}
+              </div>
+            </div>
           </div>
-        )}
+          <div className="text-xs text-gray-700 mt-2" style={{ fontFamily: 'Georgia, serif' }}>
+            <span className="font-semibold">WAYBILL ID:</span> {waybill.id}
+          </div>
+        </div>
 
         {/* Title */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-black" style={{ fontFamily: 'Arial, sans-serif' }}>
+        <div className="text-center my-6">
+          <h1 className="text-3xl font-bold text-black underline" style={{ fontFamily: 'Georgia, serif' }}>
             WAYBILL
           </h1>
         </div>
 
         {/* Header Information */}
-        <div className="mb-6 space-y-2" style={{ fontFamily: 'Arial, sans-serif', fontSize: '12pt' }}>
-          <div className="text-black">
-            <strong>Date:</strong> {format(waybill.issueDate, 'dd MMMM yyyy')}
+        <div className="mb-6" style={{ fontFamily: 'Georgia, serif', fontSize: '13pt' }}>
+          <div className="mb-1 text-black">
+            <strong>Date:</strong> {format(waybill.issueDate, 'do MMMM yyyy')}
           </div>
-          <div className="text-black">
-            <strong>Driver's Name:</strong> {waybill.driverName}
+          <div className="mb-1 text-black">
+            <strong>Driver’s Name:</strong> {waybill.driverName}
           </div>
-          <div className="text-black">
+          <div className="mb-1 text-black">
             <strong>Vehicle:</strong> {waybill.vehicle}
           </div>
         </div>
 
         {/* Project Description */}
-        <div className="mb-6" style={{ fontFamily: 'Arial, sans-serif', fontSize: '12pt' }}>
-          <div className="text-black">
-            <strong>Materials Waybill for {waybill.purpose}</strong>
+        <div className="mb-4" style={{ fontFamily: 'Georgia, serif', fontSize: '13pt' }}>
+          <div className="text-black font-semibold">
+            Materials Waybill for {waybill.purpose}
           </div>
         </div>
 
         {/* Items List */}
-        <div className="mb-8" style={{ fontFamily: 'Arial, sans-serif', fontSize: '12pt' }}>
-          <div className="space-y-2">
-            {waybill.items.map((item, index) => (
-              <div key={index} className="text-black">
-                {index + 1}. {item.assetName} ({item.quantity})
-              </div>
-            ))}
-          </div>
-        </div>
+        <ol className="mb-8 pl-6" style={{ fontFamily: 'Georgia, serif', fontSize: '13pt', color: '#222' }}>
+          {waybill.items.map((item, index) => (
+            <li key={index}>
+              {item.assetName} ({item.quantity})
+            </li>
+          ))}
+        </ol>
 
         {/* Signature Line */}
-        <div className="mb-8 mt-16" style={{ fontFamily: 'Arial, sans-serif', fontSize: '12pt' }}>
+        <div className="mb-8 mt-16" style={{ fontFamily: 'Georgia, serif', fontSize: '13pt' }}>
           <div className="border-b border-black w-64 mb-2"></div>
           <div className="text-black">Signed</div>
         </div>
 
-        {/* Company Name */}
-        <div className="text-center mt-16" style={{ fontFamily: 'Arial, sans-serif', fontSize: '12pt' }}>
+        {/* Company Name at Bottom */}
+        <div className="text-center mt-16" style={{ fontFamily: 'Georgia, serif', fontSize: '13pt' }}>
           <div className="text-black font-bold">
             {companySettings?.companyName || 'Dewatering Construction Etc Limited.'}
           </div>
         </div>
 
         {/* Footer Information */}
-        <div className="mt-8 text-xs text-gray-600" style={{ fontFamily: 'Arial, sans-serif' }}>
-          <div>Waybill ID: {waybill.id}</div>
+        <div className="mt-8 text-xs text-gray-600" style={{ fontFamily: 'Georgia, serif' }}>
           {waybill.expectedReturnDate && (
-            <div>Expected Return: {format(waybill.expectedReturnDate, 'dd MMMM yyyy')}</div>
+            <div>Expected Return: {format(waybill.expectedReturnDate, 'do MMMM yyyy')}</div>
           )}
         </div>
       </div>

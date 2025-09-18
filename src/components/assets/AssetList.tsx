@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -8,12 +8,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Search, Package, Filter } from "lucide-react";
 import { Asset } from "@/types/asset";
 
-interface AssetListProps {
+export interface AssetListProps {
   assets: Asset[];
-  onEditAsset: (asset: Asset) => void;
+  onEdit: (asset: Asset) => void;
+  onDelete: (asset: Asset) => void;
 }
 
-export function AssetList({ assets, onEditAsset }: AssetListProps) {
+export function AssetList({ assets, onEdit, onDelete }: AssetListProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [typeFilter, setTypeFilter] = useState<string>("all");
@@ -39,8 +40,8 @@ export function AssetList({ assets, onEditAsset }: AssetListProps) {
 
   const getCategoryBadge = (category: string) => {
     return (
-      <Badge variant={category === 'dewatering' ? 'default' : 'secondary'}>
-        {category === 'dewatering' ? 'Dewatering' : 'Waterproofing'}
+      <Badge variant={category === 'Dewatering' ? 'default' : 'secondary'}>
+        {category === 'Dewatering' ? 'Dewatering' : 'Waterproofing'}
       </Badge>
     );
   };
@@ -141,9 +142,17 @@ export function AssetList({ assets, onEditAsset }: AssetListProps) {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => onEditAsset(asset)}
+                    onClick={() => onEdit(asset)}
                   >
                     Edit
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => onDelete(asset)}
+                    className="ml-2"
+                  >
+                    Delete
                   </Button>
                 </TableCell>
               </TableRow>
