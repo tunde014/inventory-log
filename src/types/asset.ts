@@ -20,6 +20,9 @@ export interface Waybill {
   issueDate: Date;
   expectedReturnDate?: Date;
   status: 'outstanding' | 'return_initiated' | 'return_completed';
+  service: string;
+  site: string;
+  client: string;
   createdAt: Date;
   updatedAt: Date;
 }

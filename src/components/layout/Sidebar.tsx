@@ -25,7 +25,8 @@ export function Sidebar({ activeTab, onTabChange }: SidebarProps) {
     { id: 'create-waybill', label: 'Create Waybill', icon: FileText },
     { id: 'waybills', label: 'View Waybills', icon: FileText },
     { id: 'quick-checkout', label: 'Quick Checkout', icon: ShoppingCart },
-    { id: 'sites', label: 'Sites', icon: MapPin }, // <-- Add this line
+    { id: 'sites', label: 'Sites', icon: MapPin },
+    { id: 'employee-vehicle-settings', label: 'Employee & Vehicle Settings', icon: Settings },
     { id: 'settings', label: 'Company Settings', icon: Settings },
   ];
 

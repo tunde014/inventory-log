@@ -1,13 +1,7 @@
 import React from "react";
 import * as XLSX from "xlsx";
 import { Button } from "@/components/ui/button";
-
-interface Asset {
-  id: string;
-  name: string;
-  status: "available" | "taken" | "damaged" | "missing";
-  // ...other fields
-}
+import { Asset } from "@/types/asset";
 
 interface InventoryReportProps {
   assets: Asset[];

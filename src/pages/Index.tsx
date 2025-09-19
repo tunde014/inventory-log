@@ -9,6 +9,7 @@ import { WaybillDocument } from "@/components/waybills/WaybillDocument";
 import { ReturnForm } from "@/components/waybills/ReturnForm";
 import { QuickCheckoutForm } from "@/components/checkout/QuickCheckoutForm";
 import { CompanySettings } from "@/components/settings/CompanySettings";
+import { EmployeeVehicleSettings } from "@/components/settings/EmployeeVehicleSettings";
 import { Asset, Waybill, QuickCheckout, ReturnBill } from "@/types/asset";
 import { useToast } from "@/hooks/use-toast";
 import { BulkImportAssets } from "@/components/assets/BulkImportAssets";
@@ -90,6 +91,9 @@ const Index = () => {
         issueDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
         expectedReturnDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
         status: "outstanding",
+        service: "Dewatering",
+        site: "Main Construction Site",
+        client: "ABC Construction",
         createdAt: new Date(),
         updatedAt: new Date()
       }
@@ -282,10 +286,11 @@ const Index = () => {
           onDelete={handleDeleteAsset}
         />;
       case "add-asset":
-        return <AddAssetForm onAddAsset={handleAddAsset} />;
+        return <AddAssetForm onAddAsset={handleAddAsset} onCancel={() => setActiveTab("dashboard")} />;
       case "create-waybill":
         return <WaybillForm 
           assets={assets}
+          sites={sites}
           onCreateWaybill={handleCreateWaybill}
           onCancel={() => setActiveTab("dashboard")}
         />;
@@ -302,18 +307,26 @@ const Index = () => {
           onQuickCheckout={handleQuickCheckout}
           onReturnItem={handleReturnItem}
         />;
+      case "employee-vehicle-settings":
+        return <EmployeeVehicleSettings />;
       case "settings":
         return <CompanySettings />;
       case "sites":
         return (
           <SitesPage
             sites={sites}
+            waybills={waybills}
             onAddSite={site => setSites(prev => [...prev, site])}
             onUpdateSite={updatedSite =>
               setSites(prev =>
                 prev.map(site => (site.id === updatedSite.id ? updatedSite : site))
               )
             }
+            onDeleteSite={siteId => setSites(prev => prev.filter(site => site.id !== siteId))}
+            onCreateReturnWaybill={(siteId, items) => {
+              // This will be handled by the return waybill form
+              console.log('Creating return waybill for site:', siteId, 'with items:', items);
+            }}
           />
         );
       default:

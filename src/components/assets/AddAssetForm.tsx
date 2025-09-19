@@ -10,12 +10,13 @@ import { Asset } from "@/types/asset";
 import { useToast } from "@/hooks/use-toast";
 
 export interface AddAssetFormProps {
-  asset?: Asset; // optional if used for both add and edit
-  onSave: (updatedAsset: Asset) => void;
+  asset?: Asset;
+  onSave?: (updatedAsset: Asset) => void;
+  onAddAsset?: (assetData: Omit<Asset, 'id' | 'createdAt' | 'updatedAt'>) => void;
   onCancel: () => void;
 }
 
-export function AddAssetForm({ asset, onSave, onCancel }: AddAssetFormProps) {
+export function AddAssetForm({ asset, onSave, onAddAsset, onCancel }: AddAssetFormProps) {
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: "",
@@ -53,18 +54,33 @@ export function AddAssetForm({ asset, onSave, onCancel }: AddAssetFormProps) {
       return;
     }
 
-    const assetData = {
-      id: asset?.id, // include id if editing existing asset
-      name: formData.name,
-      description: formData.description || undefined,
-      quantity: parseInt(formData.quantity),
-      unitOfMeasurement: formData.unitOfMeasurement,
-      category: formData.category as 'dewatering' | 'waterproofing',
-      type: formData.type as 'consumable' | 'non-consumable' | 'tools' | 'equipment',
-      location: formData.location || undefined
-    };
-
-    onSave(assetData);
+    if (asset && onSave) {
+      // Editing existing asset
+      const updatedAsset: Asset = {
+        ...asset,
+        name: formData.name,
+        description: formData.description || undefined,
+        quantity: parseInt(formData.quantity),
+        unitOfMeasurement: formData.unitOfMeasurement,
+        category: formData.category as 'dewatering' | 'waterproofing',
+        type: formData.type as 'consumable' | 'non-consumable' | 'tools' | 'equipment',
+        location: formData.location || undefined,
+        updatedAt: new Date()
+      };
+      onSave(updatedAsset);
+    } else if (onAddAsset) {
+      // Adding new asset
+      const assetData = {
+        name: formData.name,
+        description: formData.description || undefined,
+        quantity: parseInt(formData.quantity),
+        unitOfMeasurement: formData.unitOfMeasurement,
+        category: formData.category as 'dewatering' | 'waterproofing',
+        type: formData.type as 'consumable' | 'non-consumable' | 'tools' | 'equipment',
+        location: formData.location || undefined
+      };
+      onAddAsset(assetData);
+    }
     
     toast({
       title: "Success",

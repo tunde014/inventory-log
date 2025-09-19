@@ -7,9 +7,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Trash2, Plus } from "lucide-react";
 import { Asset, Waybill } from "@/types/asset";
 import { useToast } from "@/hooks/use-toast";
+import { Site } from "@/components/sites/SitesPage";
+import { useEmployeeVehicleSettings } from "@/hooks/useEmployeeVehicleSettings";
 
 interface WaybillFormProps {
   assets: Asset[];
+  sites: Site[];
   onCreateWaybill: (waybillData: Omit<Waybill, 'id' | 'createdAt' | 'updatedAt'>) => void;
   onCancel: () => void;
 }
@@ -21,8 +24,9 @@ interface WaybillItemInput {
   availableQuantity: number;
 }
 
-export function WaybillForm({ assets, onCreateWaybill, onCancel }: WaybillFormProps) {
+export function WaybillForm({ assets, sites, onCreateWaybill, onCancel }: WaybillFormProps) {
   const { toast } = useToast();
+  const { employees, vehicles } = useEmployeeVehicleSettings();
   const [purpose, setPurpose] = useState("");
   const [driverName, setDriverName] = useState("");
   const [vehicle, setVehicle] = useState("");
@@ -132,23 +136,33 @@ export function WaybillForm({ assets, onCreateWaybill, onCancel }: WaybillFormPr
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="driverName">Driver's Name *</Label>
-              <Input
-                id="driverName"
-                value={driverName}
-                onChange={(e) => setDriverName(e.target.value)}
-                placeholder="Enter driver's name"
-                required
-              />
+              <Select value={driverName} onValueChange={setDriverName}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select driver" />
+                </SelectTrigger>
+                <SelectContent>
+                  {employees.map((employee) => (
+                    <SelectItem key={employee.id} value={employee.name}>
+                      {employee.name} {employee.position && `(${employee.position})`}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label htmlFor="vehicle">Vehicle (Type & Reg No.) *</Label>
-              <Input
-                id="vehicle"
-                value={vehicle}
-                onChange={(e) => setVehicle(e.target.value)}
-                placeholder="e.g., Toyota Hilux - ABC-123D"
-                required
-              />
+              <Select value={vehicle} onValueChange={setVehicle}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select vehicle" />
+                </SelectTrigger>
+                <SelectContent>
+                  {vehicles.map((v) => (
+                    <SelectItem key={v.id} value={`${v.type} - ${v.registrationNumber}`}>
+                      {v.type} - {v.registrationNumber}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label htmlFor="expectedReturnDate">Expected Return Date</Label>
@@ -182,13 +196,18 @@ export function WaybillForm({ assets, onCreateWaybill, onCancel }: WaybillFormPr
             
             <div>
               <Label htmlFor="site">Site *</Label>
-              <Input
-                id="site"
-                value={site}
-                onChange={(e) => setSite(e.target.value)}
-                placeholder="Enter site location"
-                required
-              />
+              <Select value={site} onValueChange={setSite}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select site" />
+                </SelectTrigger>
+                <SelectContent>
+                  {sites.map((s) => (
+                    <SelectItem key={s.id} value={s.name}>
+                      {s.name} - {s.client}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label htmlFor="client">Client *</Label>

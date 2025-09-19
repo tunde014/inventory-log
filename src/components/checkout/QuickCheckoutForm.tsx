@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Activity, Plus } from "lucide-react";
 import { Asset, QuickCheckout } from "@/types/asset";
 import { useToast } from "@/hooks/use-toast";
+import { useEmployeeVehicleSettings } from "@/hooks/useEmployeeVehicleSettings";
 import { format, differenceInDays } from "date-fns";
 
 interface QuickCheckoutFormProps {
@@ -155,13 +156,18 @@ export function QuickCheckoutForm({
               
               <div className="space-y-2">
                 <Label htmlFor="employee">Employee *</Label>
-                <Input
-                  id="employee"
-                  value={formData.employee}
-                  onChange={(e) => setFormData(prev => ({ ...prev, employee: e.target.value }))}
-                  placeholder="Employee name"
-                  required
-                />
+                <Select value={formData.employee} onValueChange={(value) => setFormData(prev => ({ ...prev, employee: value }))}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select employee" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {employees.map((employee) => (
+                      <SelectItem key={employee.id} value={employee.name}>
+                        {employee.name} {employee.position && `(${employee.position})`}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               
               <div className="space-y-2">
